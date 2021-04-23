@@ -1,5 +1,4 @@
 import type { SchemaType } from '@/schemas/protocols'
-import { IsStringValidation } from '@/validations/models'
 import type {
   IDoValidation,
   ValidatePayload,
@@ -7,7 +6,8 @@ import type {
 } from '@/validations/protocols'
 import type { IValidator } from './protocols'
 
-export class Validator<T, ST extends SchemaType> implements IValidator<T, ST> {
+export abstract class AbstractValidator<T, ST extends SchemaType>
+  implements IValidator<T, ST> {
   readonly objectType!: T
   readonly validations: IDoValidation[]
   constructor(readonly schemaType: ST) {
@@ -18,15 +18,5 @@ export class Validator<T, ST extends SchemaType> implements IValidator<T, ST> {
       const error = validation.validate(payload)
       if (error) return error
     }
-  }
-}
-
-export class StringValidator<ST extends SchemaType> extends Validator<
-  string,
-  ST
-> {
-  constructor(schemaType: ST) {
-    super(schemaType)
-    this.validations.push(new IsStringValidation())
   }
 }

@@ -1,4 +1,5 @@
-import type { IDoValidation } from '@/validations/protocols'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ISchema } from './interfaces'
 import type { IValidator } from '@/validators/protocols'
 
 export type RequiredSchema = 'required'
@@ -11,16 +12,6 @@ export type SchemaType =
   | OptionalSchema
   | PrivateSchema
   | ReadonlySchema
-
-export interface ISchemable<ST extends SchemaType> {
-  readonly schemaType: ST
-}
-
-export interface ISchema<T, ST extends SchemaType>
-  extends IDoValidation,
-    ISchemable<ST> {
-  readonly schemas: T
-}
 
 type ExtractObjectSchema<T extends Record<PropertyKey, unknown>> = {
   [P in keyof T & string]: T[P] extends ISchema<any, any>

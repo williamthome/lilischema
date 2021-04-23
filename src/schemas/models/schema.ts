@@ -3,7 +3,8 @@ import type {
   ValidatePayload,
   ValidateResponse,
 } from '@/validations/protocols'
-import type { ISchema, SchemaType } from './protocols'
+import type { ISchema } from '../protocols/interfaces'
+import type { SchemaType } from '../protocols/types'
 
 export class Schema<T, ST extends SchemaType> implements ISchema<T, ST> {
   constructor(
