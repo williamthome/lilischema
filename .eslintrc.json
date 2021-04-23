@@ -6,10 +6,15 @@
   "env": {
     "node": true,
     "commonjs": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
   "parser": "@typescript-eslint/parser",
-  "extends": ["plugin:@typescript-eslint/recommended", "eslint:recommended", "prettier"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "prettier"
+  ],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
