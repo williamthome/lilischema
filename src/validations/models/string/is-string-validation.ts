@@ -1,15 +1,22 @@
-import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import type {
+  ValidateOptions,
+  ValidatePayload,
+  ValidateResponse,
+} from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
 export class IsStringValidation<
   T extends string = string
 > extends AbstractValidation<T> {
-  validate = (toValidate?: ValidatePayload): ValidateResponse => {
-    if (typeof toValidate === 'string') return
-    const error: Error = {
-      message: 'Value must be an string',
+  validate = (
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
+  ): ValidateResponse => {
+    if (typeof payload === 'string') return
+    return {
+      message: `${opts.propertyKey || 'Value'} must be an string`,
       name: 'IsStringValidationError',
+      validated: { payload, ...opts },
     }
-    return error
   }
 }

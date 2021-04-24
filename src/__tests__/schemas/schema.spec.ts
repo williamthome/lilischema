@@ -1,5 +1,5 @@
+import type { ExtractSchema, SchemaType } from '@/schemas/protocols'
 import { Schema } from '@/schemas'
-import type { SchemaType } from '@/schemas/protocols'
 import type { IDoValidation } from '@/validations/protocols'
 import {
   BooleanValidator,
@@ -53,14 +53,14 @@ describe('Schema', () => {
     expect((sut.validate('foo') as Error).name).toBe('InvalidPayloadError')
   })
 
-  it('should return nested schema validation error', () => {
+  fit('should return nested schema validation error', () => {
     const { sut } = makeSut(
       {
         foo: new NumberValidator('required'),
         bar: new Schema(
           {
-            foo: new BooleanValidator('required'),
-            bar: new Schema(
+            xfoo: new BooleanValidator('required'),
+            xbar: new Schema(
               {
                 foobar: new StringValidator('required'),
               },
@@ -79,8 +79,8 @@ describe('Schema', () => {
       (sut.validate({
         foo: 1,
         bar: {
-          foo: true,
-          bar: {
+          xfoo: true,
+          xbar: {
             foobar: 0,
           },
         },
@@ -94,8 +94,8 @@ describe('Schema', () => {
         foo: new NumberValidator('required'),
         bar: new Schema(
           {
-            foo: new BooleanValidator('required'),
-            bar: new Schema(
+            xfoo: new BooleanValidator('required'),
+            xbar: new Schema(
               {
                 foobar: new StringValidator('required'),
               },
@@ -110,17 +110,18 @@ describe('Schema', () => {
       'required',
       new ObjectValidator('required'),
     )
-    expect(
-      sut.validate({
-        foo: 1,
-        bar: {
-          foo: true,
-          bar: {
-            foobar: 'foobar',
-          },
+
+    const foo: ExtractSchema<typeof sut> = {
+      foo: 1,
+      bar: {
+        xfoo: true,
+        xbar: {
+          foobar: 'foobar',
         },
-      }),
-    ).toBeUndefined()
+      },
+    }
+
+    expect(sut.validate(foo)).toBeUndefined()
   })
 
   it('should return InvalidPayloadError', () => {

@@ -2,6 +2,7 @@ import type { ISchema } from './protocols/interfaces'
 import type { SchemaType } from './protocols/types'
 import type {
   IDoValidation,
+  ValidateOptions,
   ValidatePayload,
   ValidateResponse,
 } from '@/validations/protocols'
@@ -19,9 +20,14 @@ export class Schema<T, ST extends SchemaType>
     super()
   }
 
-  validate = (payload?: ValidatePayload): ValidateResponse => {
-    const schemaTypeError = this.schemaValidation.validate(payload)
+  validate = (
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
+  ): ValidateResponse => {
+    const schemaTypeError = this.schemaValidation.validate(payload, opts)
     if (schemaTypeError) return schemaTypeError
+
+    const { isPartialValidation, propertyKey, propertyPath } = opts
 
     if (!isIterable(payload)) {
       return {
@@ -30,14 +36,18 @@ export class Schema<T, ST extends SchemaType>
           foo: 'bar'
         }`,
         name: 'InvalidPayloadError',
+        validated: { payload, ...opts },
       }
     }
+
+    const payloadPath = propertyPath ?? []
 
     for (const [key, toValidate] of Object.entries(payload)) {
       if (!(key in this.schemas)) {
         return {
           message: `Field '${key}' do not exists in schema`,
           name: 'InvalidSchemaError',
+          validated: { payload, ...opts },
         }
       }
 
@@ -47,10 +57,19 @@ export class Schema<T, ST extends SchemaType>
         return {
           message: `Field '${key}' must do validate`,
           name: 'InvalidValidationError',
+          validated: { payload, ...opts },
         }
       }
 
-      const error = validation.validate(toValidate)
+      const validationPath = propertyKey
+        ? [...payloadPath, propertyKey]
+        : payloadPath
+
+      const error = validation.validate(toValidate, {
+        propertyKey: key,
+        propertyPath: validationPath,
+        isPartialValidation,
+      })
       if (error) return error
     }
   }

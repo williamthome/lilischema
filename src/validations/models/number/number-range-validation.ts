@@ -1,4 +1,8 @@
-import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import type {
+  ValidateOptions,
+  ValidatePayload,
+  ValidateResponse,
+} from '@/validations/protocols'
 import { IsNumberValidation } from './is-number-validation'
 import { AbstractValidation } from '@/validations'
 
@@ -10,33 +14,36 @@ export class NumberRangeValidation<
   }
 
   validate = (
-    toValidate?: ValidatePayload,
-    isNumberValidation?: IsNumberValidation,
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
   ): ValidateResponse => {
-    isNumberValidation = isNumberValidation ?? new IsNumberValidation()
-    const validationError = isNumberValidation.validate(toValidate)
+    const validationError = new IsNumberValidation().validate(payload, opts)
     if (validationError) return validationError
 
     const { min, max } = this.range
-    const value = toValidate as number
+    const number = payload as number
+    const { propertyKey } = opts
 
     if (min !== undefined && max !== undefined) {
-      if (value >= min && value <= max) return
+      if (number >= min && number <= max) return
       return {
-        message: `Value must be between ${min} && ${max}`,
+        message: `${propertyKey || 'Value'} must be between ${min} && ${max}`,
         name: 'NumberRangeValidationError',
+        validated: { payload, ...opts },
       }
     } else if (min !== undefined) {
-      if (value >= min) return
+      if (number >= min) return
       return {
-        message: `Value must be at least ${min}`,
+        message: `${propertyKey || 'Value'} must be at least ${min}`,
         name: 'MinNumberValidationError',
+        validated: { payload, ...opts },
       }
     } else if (max !== undefined) {
-      if (value <= max) return
+      if (number <= max) return
       return {
-        message: `Value must be a maximum of ${max}`,
+        message: `${propertyKey || 'Value'} must be a maximum of ${max}`,
         name: 'MaxNumberValidationError',
+        validated: { payload, ...opts },
       }
     }
   }

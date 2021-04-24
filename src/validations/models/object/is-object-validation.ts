@@ -1,15 +1,22 @@
-import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import type {
+  ValidateOptions,
+  ValidatePayload,
+  ValidateResponse,
+} from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
 export class IsObjectValidation<T = unknown> extends AbstractValidation<T> {
-  validate = (toValidate?: ValidatePayload): ValidateResponse => {
-    if (typeof toValidate !== 'function' && toValidate === Object(toValidate)) {
+  validate = (
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
+  ): ValidateResponse => {
+    if (typeof payload !== 'function' && payload === Object(payload)) {
       return
     }
-    const error: Error = {
-      message: 'Value must be an object',
+    return {
+      message: `${opts.propertyKey || 'Value'} must be an object`,
       name: 'IsObjectValidationError',
+      validated: { payload, ...opts },
     }
-    return error
   }
 }

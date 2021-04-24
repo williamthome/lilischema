@@ -1,15 +1,22 @@
-import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import type {
+  ValidateOptions,
+  ValidatePayload,
+  ValidateResponse,
+} from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
 export class IsBooleanValidation<
   T extends boolean = boolean
 > extends AbstractValidation<T> {
-  validate = (toValidate?: ValidatePayload): ValidateResponse => {
-    if (typeof toValidate === 'boolean') return
-    const error: Error = {
-      message: 'Value must be an boolean',
+  validate = (
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
+  ): ValidateResponse => {
+    if (typeof payload === 'boolean') return
+    return {
+      message: `${opts.propertyKey || 'Value'} must be an boolean`,
       name: 'IsBooleanValidationError',
+      validated: { payload, ...opts },
     }
-    return error
   }
 }

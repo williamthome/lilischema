@@ -2,6 +2,7 @@ import type { IValidator } from './protocols'
 import type { SchemaType } from '@/schemas/protocols'
 import type {
   IDoValidation,
+  ValidateOptions,
   ValidatePayload,
   ValidateResponse,
 } from '@/validations/protocols'
@@ -17,9 +18,12 @@ export abstract class AbstractValidator<T, ST extends SchemaType>
     this.validations = []
   }
 
-  validate = (payload?: ValidatePayload): ValidateResponse => {
+  validate = (
+    payload?: ValidatePayload,
+    opts: ValidateOptions = {},
+  ): ValidateResponse => {
     for (const validation of this.validations) {
-      const error = validation.validate(payload)
+      const error = validation.validate(payload, opts)
       if (error) return error
     }
   }
