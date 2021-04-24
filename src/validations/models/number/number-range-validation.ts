@@ -1,17 +1,18 @@
-import type {
-  IDoValidation,
-  ValidatePayload,
-  ValidateResponse,
-} from '@/validations/protocols'
+import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
 import { IsNumberValidation } from './is-number-validation'
+import { AbstractValidation } from '@/validations'
 
-export class NumberRangeValidation implements IDoValidation {
-  constructor(readonly range: { min?: number; max?: number }) {}
+export class NumberRangeValidation<
+  T extends number = number
+> extends AbstractValidation<T> {
+  constructor(readonly range: { min?: number; max?: number }) {
+    super()
+  }
 
-  validate(
+  validate = (
     toValidate?: ValidatePayload,
     isNumberValidation?: IsNumberValidation,
-  ): ValidateResponse {
+  ): ValidateResponse => {
     isNumberValidation = isNumberValidation ?? new IsNumberValidation()
     const validationError = isNumberValidation.validate(toValidate)
     if (validationError) return validationError

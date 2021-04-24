@@ -1,11 +1,10 @@
-import type {
-  IDoValidation,
-  ValidatePayload,
-  ValidateResponse,
-} from '@/validations/protocols'
+import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import { AbstractValidation } from '@/validations'
 
-export class IsNumberValidation implements IDoValidation {
-  validate(toValidate?: ValidatePayload): ValidateResponse {
+export class IsNumberValidation<
+  T extends number = number
+> extends AbstractValidation<T> {
+  validate = (toValidate?: ValidatePayload): ValidateResponse => {
     if (typeof toValidate === 'number') return
     const error: Error = {
       message: 'Value must be an number',

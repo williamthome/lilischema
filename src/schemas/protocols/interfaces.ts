@@ -6,7 +6,7 @@ export interface ISchemable<ST extends SchemaType> {
 }
 
 export interface ISchema<T, ST extends SchemaType>
-  extends IDoValidation,
+  extends IDoValidation<T>,
     ISchemable<ST> {
   readonly schemas: T
 }

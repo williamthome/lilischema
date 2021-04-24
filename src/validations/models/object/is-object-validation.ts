@@ -1,11 +1,8 @@
-import type {
-  IDoValidation,
-  ValidatePayload,
-  ValidateResponse,
-} from '@/validations/protocols'
+import type { ValidatePayload, ValidateResponse } from '@/validations/protocols'
+import { AbstractValidation } from '@/validations'
 
-export class IsObjectValidation implements IDoValidation {
-  validate(toValidate?: ValidatePayload): ValidateResponse {
+export class IsObjectValidation<T = unknown> extends AbstractValidation<T> {
+  validate = (toValidate?: ValidatePayload): ValidateResponse => {
     if (typeof toValidate !== 'function' && toValidate === Object(toValidate)) {
       return
     }
