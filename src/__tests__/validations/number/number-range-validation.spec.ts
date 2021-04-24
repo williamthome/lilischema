@@ -16,29 +16,24 @@ const makeSut = (range: { min?: number; max?: number }): Sut => {
 //#endregion Factories
 
 describe('NumberRangeValidation', () => {
-  it('should return error if undefined', () => {
-    const { sut } = makeSut({})
-    expect(sut.validate()).toBeTruthy()
-  })
-
   it('should return error if NaN', () => {
     const { sut } = makeSut({})
-    expect(sut.validate('NaN')).toBeTruthy()
+    expect((sut.validate('foo') as Error).name).toBe('IsNumberValidationError')
   })
 
   it('should return error if below min', () => {
     const { sut } = makeSut({ min: 1 })
-    expect(sut.validate(0)).toBeTruthy()
+    expect((sut.validate(0) as Error).name).toBe('MinNumberValidationError')
   })
 
   it('should return error if above max', () => {
     const { sut } = makeSut({ max: 0 })
-    expect(sut.validate(1)).toBeTruthy()
+    expect((sut.validate(1) as Error).name).toBe('MaxNumberValidationError')
   })
 
   it('should return error if not between min and max', () => {
     const { sut } = makeSut({ min: 0, max: 1 })
-    expect(sut.validate(-1)).toBeTruthy()
+    expect((sut.validate(-1) as Error).name).toBe('NumberRangeValidationError')
   })
 
   it('should return undefined if above min', () => {

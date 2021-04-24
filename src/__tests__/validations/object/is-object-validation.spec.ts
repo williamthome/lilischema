@@ -16,9 +16,19 @@ const makeSut = (): Sut => {
 //#endregion Factories
 
 describe('IsObjectValidation', () => {
-  it('should return error if undefined', () => {
+  it('should return error if no value', () => {
     const { sut } = makeSut()
     expect(sut.validate()).toBeTruthy()
+  })
+
+  it('should return error if undefined', () => {
+    const { sut } = makeSut()
+    expect(sut.validate(undefined)).toBeTruthy()
+  })
+
+  it('should return error if null', () => {
+    const { sut } = makeSut()
+    expect(sut.validate(null)).toBeTruthy()
   })
 
   it('should return error if boolean', () => {
@@ -46,7 +56,7 @@ describe('IsObjectValidation', () => {
     expect(sut.validate(Symbol())).toBeTruthy()
   })
 
-  it('should return undefined if empty', () => {
+  it('should return undefined if empty object', () => {
     const { sut } = makeSut()
     expect(sut.validate({})).toBeUndefined()
   })

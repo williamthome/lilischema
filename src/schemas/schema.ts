@@ -5,7 +5,8 @@ import type {
   ValidatePayload,
   ValidateResponse,
 } from '@/validations/protocols'
-import { AbstractValidation } from '@/validations'
+import { AbstractValidation, doValidate } from '@/validations'
+import { isIterable } from '@/common/helpers'
 
 export class Schema<T, ST extends SchemaType>
   extends AbstractValidation<T>
@@ -19,6 +20,29 @@ export class Schema<T, ST extends SchemaType>
   }
 
   validate = (payload?: ValidatePayload): ValidateResponse => {
-    return this.schemaValidation.validate(payload)
+    const schemaTypeError = this.schemaValidation.validate(payload)
+    if (schemaTypeError) return schemaTypeError
+
+    if (!isIterable(payload)) {
+      return {
+        message: `Payload must be iterable
+        e.g. {
+          foo: 'bar'
+        }`,
+        name: 'InvalidPayloadError',
+      }
+    }
+
+    for (const [key, validation] of Object.entries(this.schemas)) {
+      if (!doValidate(validation)) {
+        return {
+          message: `Field '${key}' must do validate`,
+          name: 'InvalidValidationError',
+        }
+      }
+
+      const error = validation.validate(payload[key])
+      if (error) return error
+    }
   }
 }

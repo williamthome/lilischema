@@ -24,19 +24,19 @@ export class NumberRangeValidation<
       if (value >= min && value <= max) return
       return {
         message: `Value must be between ${min} && ${max}`,
-        name: 'IsNumberValidationError',
+        name: 'NumberRangeValidationError',
       }
     } else if (min !== undefined) {
       if (value >= min) return
       return {
         message: `Value must be at least ${min}`,
-        name: 'IsNumberValidationError',
+        name: 'MinNumberValidationError',
       }
     } else if (max !== undefined) {
       if (value <= max) return
       return {
         message: `Value must be a maximum of ${max}`,
-        name: 'IsNumberValidationError',
+        name: 'MaxNumberValidationError',
       }
     }
   }
