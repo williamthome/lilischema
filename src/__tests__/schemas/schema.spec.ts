@@ -39,7 +39,9 @@ describe('Schema', () => {
       'required',
       new ObjectValidator('required'),
     )
-    expect((sut.validate({}) as Error).name).toBe('InvalidValidationError')
+    expect((sut.validate({ foo: '' }) as Error).name).toBe(
+      'InvalidValidationError',
+    )
   })
 
   it('should return InvalidPayloadError', () => {
@@ -119,5 +121,16 @@ describe('Schema', () => {
         },
       }),
     ).toBeUndefined()
+  })
+
+  it('should return InvalidPayloadError', () => {
+    const { sut } = makeSut(
+      { foo: new StringValidator('required') },
+      'required',
+      new ObjectValidator('required'),
+    )
+    expect((sut.validate({ bar: 'invalid key' }) as Error).name).toBe(
+      'InvalidSchemaError',
+    )
   })
 })

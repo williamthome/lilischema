@@ -33,7 +33,16 @@ export class Schema<T, ST extends SchemaType>
       }
     }
 
-    for (const [key, validation] of Object.entries(this.schemas)) {
+    for (const [key, toValidate] of Object.entries(payload)) {
+      if (!(key in this.schemas)) {
+        return {
+          message: `Field '${key}' do not exists in schema`,
+          name: 'InvalidSchemaError',
+        }
+      }
+
+      const validation = (this.schemas as Record<PropertyKey, unknown>)[key]
+
       if (!doValidate(validation)) {
         return {
           message: `Field '${key}' must do validate`,
@@ -41,7 +50,7 @@ export class Schema<T, ST extends SchemaType>
         }
       }
 
-      const error = validation.validate(payload[key])
+      const error = validation.validate(toValidate)
       if (error) return error
     }
   }
