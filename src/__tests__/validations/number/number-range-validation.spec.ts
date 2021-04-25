@@ -18,60 +18,64 @@ const makeSut = (range: { min?: number; max?: number }): Sut => {
 describe('NumberRangeValidation', () => {
   it('should return error if NaN', async () => {
     const { sut } = makeSut({})
-    const error = await sut.validate('foo')
-    expect(error ? error.name : undefined).toBe('IsNumberValidationError')
+    await expect(sut.validate('foo')).resolves.toMatchObject({
+      name: 'IsNumberValidationError',
+    })
   })
 
   it('should return error if below min', async () => {
     const { sut } = makeSut({ min: 1 })
-    const error = await sut.validate(0)
-    expect(error ? error.name : undefined).toBe('MinNumberValidationError')
+    await expect(sut.validate(0)).resolves.toMatchObject({
+      name: 'MinNumberValidationError',
+    })
   })
 
   it('should return error if above max', async () => {
     const { sut } = makeSut({ max: 0 })
-    const error = await sut.validate(1)
-    expect(error ? error.name : undefined).toBe('MaxNumberValidationError')
+    await expect(sut.validate(1)).resolves.toMatchObject({
+      name: 'MaxNumberValidationError',
+    })
   })
 
   it('should return error if not between min and max', async () => {
     const { sut } = makeSut({ min: 0, max: 1 })
-    const error = await sut.validate(-1)
-    expect(error ? error.name : undefined).toBe('NumberRangeValidationError')
+    await expect(sut.validate(-1)).resolves.toMatchObject({
+      name: 'NumberRangeValidationError',
+    })
   })
 
-  it('should return undefined if above min', () => {
+  it('should return undefined if above min', async () => {
     const { sut } = makeSut({ min: 0 })
-    expect(sut.validate(1)).resolves.toBeUndefined()
+    await expect(sut.validate(1)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if below max', () => {
+  it('should return undefined if below max', async () => {
     const { sut } = makeSut({ max: 1 })
-    expect(sut.validate(0)).resolves.toBeUndefined()
+    await expect(sut.validate(0)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if between min and max', () => {
+  it('should return undefined if between min and max', async () => {
     const { sut } = makeSut({ min: 0, max: 2 })
-    expect(sut.validate(1)).resolves.toBeUndefined()
+    await expect(sut.validate(1)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if equals min', () => {
+  it('should return undefined if equals min', async () => {
     const { sut } = makeSut({ min: 0 })
-    expect(sut.validate(0)).resolves.toBeUndefined()
+    await expect(sut.validate(0)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if equals max', () => {
+  it('should return undefined if equals max', async () => {
     const { sut } = makeSut({ max: 0 })
-    expect(sut.validate(0)).resolves.toBeUndefined()
+    await expect(sut.validate(0)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if equals min and max is defined', () => {
+  it('should return undefined if equals min and max is defined', async () => {
     const { sut } = makeSut({ min: 0, max: 1 })
-    expect(sut.validate(0)).resolves.toBeUndefined()
+    await expect(sut.validate(0)).resolves.toBeUndefined()
   })
 
-  it('should return undefined if equals max and min is defined', () => {
+  it('should return undefined if equals max and min is defined', async () => {
     const { sut } = makeSut({ min: 0, max: 1 })
-    expect(sut.validate(1)).resolves.toBeUndefined()
+    await expect(sut.validate(1)).resolves.toBeUndefined()
   })
 })
