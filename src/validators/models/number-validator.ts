@@ -15,7 +15,6 @@ export class NumberValidator<
   }
 
   range(range: NumberRange): this {
-    this.validations.push(new NumberRangeValidation(this.validationType, range))
-    return this
+    return this.push(new NumberRangeValidation(this.validationType, range))
   }
 }

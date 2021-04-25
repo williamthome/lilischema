@@ -19,6 +19,11 @@ export abstract class AbstractValidator<
     this.validations = [typeValidation]
   }
 
+  push(...validator: IDoValidation<T>[]): this {
+    this.validations.push(...validator)
+    return this
+  }
+
   protected doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
