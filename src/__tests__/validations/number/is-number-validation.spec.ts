@@ -3,11 +3,11 @@ import { IsNumberValidation } from '@/validations/models'
 //#region Factories
 
 interface Sut {
-  sut: IsNumberValidation
+  sut: IsNumberValidation<number, 'required'>
 }
 
 const makeSut = (): Sut => {
-  const sut = new IsNumberValidation()
+  const sut = new IsNumberValidation('required')
   return {
     sut,
   }

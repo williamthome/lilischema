@@ -2,22 +2,29 @@ import type {
   ValidateOptions,
   ValidatePayload,
   ValidateResponse,
+  ValidationType,
 } from '@/validations/protocols'
 import { IsNumberValidation } from './is-number-validation'
 import { AbstractValidation } from '@/validations'
 
 export class NumberRangeValidation<
-  T extends number = number
-> extends AbstractValidation<T> {
-  constructor(readonly range: { min?: number; max?: number }) {
-    super()
+  T extends number,
+  VT extends ValidationType
+> extends AbstractValidation<T, VT> {
+  constructor(
+    validationType: VT,
+    readonly range: { min?: number; max?: number },
+  ) {
+    super(validationType)
   }
 
-  validate = (
+  doValidate = (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): ValidateResponse => {
-    const validationError = new IsNumberValidation().validate(payload, opts)
+    const validationError = new IsNumberValidation(
+      this.validationType,
+    ).validate(payload, opts)
     if (validationError) return validationError
 
     const { min, max } = this.range

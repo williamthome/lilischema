@@ -1,7 +1,6 @@
 import type { ExtractSchema } from './schemas/protocols'
-import { IsObjectValidation } from './validations/models'
 import { StringValidator } from './validators/models'
-import { Schema } from './schemas/models'
+import { Schema } from './schemas'
 
 const requiredStringValidator = new StringValidator('required')
 const valid = requiredStringValidator.validate('Valid value')
@@ -16,11 +15,9 @@ const fooSchema = new Schema(
         foo: requiredStringValidator,
       },
       'optional',
-      new IsObjectValidation(),
     ),
   },
   'required',
-  new IsObjectValidation(),
 )
 
 type FooSchemaType = ExtractSchema<typeof fooSchema>

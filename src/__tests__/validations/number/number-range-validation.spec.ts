@@ -3,11 +3,11 @@ import { NumberRangeValidation } from '@/validations/models'
 //#region Factories
 
 interface Sut {
-  sut: NumberRangeValidation
+  sut: NumberRangeValidation<number, 'required'>
 }
 
 const makeSut = (range: { min?: number; max?: number }): Sut => {
-  const sut = new NumberRangeValidation(range)
+  const sut = new NumberRangeValidation('required', range)
   return {
     sut,
   }

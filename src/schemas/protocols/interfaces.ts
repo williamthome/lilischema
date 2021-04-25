@@ -1,12 +1,11 @@
-import type { SchemaType } from './types'
-import type { IDoValidation } from '@/validations/protocols'
+import type {
+  IDoValidation,
+  IValidable,
+  ValidationType,
+} from '@/validations/protocols'
 
-export interface ISchemable<ST extends SchemaType> {
-  readonly schemaType: ST
-}
-
-export interface ISchema<T, ST extends SchemaType>
+export interface ISchema<T, VT extends ValidationType>
   extends IDoValidation<T>,
-    ISchemable<ST> {
+    IValidable<VT> {
   readonly schemas: T
 }

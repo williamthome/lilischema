@@ -1,13 +1,12 @@
 import { AbstractValidator } from '../abstract-validator'
-import type { SchemaType } from '@/schemas/protocols'
 import { IsNumberValidation } from '@/validations/models'
+import type { ValidationType } from '@/validations/protocols'
 
-export class NumberValidator<ST extends SchemaType> extends AbstractValidator<
-  number,
-  ST
-> {
-  constructor(schemaType: ST) {
-    super(schemaType)
-    this.validations.push(new IsNumberValidation())
+export class NumberValidator<
+  T extends number,
+  VT extends ValidationType
+> extends AbstractValidator<T, VT> {
+  constructor(validationType: VT) {
+    super(validationType, new IsNumberValidation(validationType))
   }
 }

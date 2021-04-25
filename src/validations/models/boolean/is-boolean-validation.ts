@@ -2,13 +2,15 @@ import type {
   ValidateOptions,
   ValidatePayload,
   ValidateResponse,
+  ValidationType,
 } from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
 export class IsBooleanValidation<
-  T extends boolean = boolean
-> extends AbstractValidation<T> {
-  validate = (
+  T extends boolean,
+  VT extends ValidationType
+> extends AbstractValidation<T, VT> {
+  doValidate = (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): ValidateResponse => {

@@ -1,13 +1,12 @@
 import { AbstractValidator } from '../abstract-validator'
-import type { SchemaType } from '@/schemas/protocols'
 import { IsObjectValidation } from '@/validations/models'
+import type { ValidationType } from '@/validations/protocols'
 
 export class ObjectValidator<
   T,
-  ST extends SchemaType
-> extends AbstractValidator<T, ST> {
-  constructor(schemaType: ST) {
-    super(schemaType)
-    this.validations.push(new IsObjectValidation())
+  VT extends ValidationType
+> extends AbstractValidator<T, VT> {
+  constructor(validationType: VT) {
+    super(validationType, new IsObjectValidation(validationType))
   }
 }

@@ -1,26 +1,32 @@
 import type { ISchema } from './protocols/interfaces'
-import type { SchemaType } from './protocols/types'
 import type {
   IDoValidation,
   ValidateOptions,
   ValidatePayload,
   ValidateResponse,
+  ValidationType,
 } from '@/validations/protocols'
-import { AbstractValidation, doValidate } from '@/validations'
+import { AbstractValidation, isDoValidation } from '@/validations'
 import { isIterable } from '@/common/helpers'
+import { IsObjectValidation } from '@/validations/models'
 
-export class Schema<T, ST extends SchemaType>
-  extends AbstractValidation<T>
-  implements ISchema<T, ST> {
+export class Schema<T, VT extends ValidationType>
+  extends AbstractValidation<T, VT>
+  implements ISchema<T, VT> {
+  readonly schemaValidation: IDoValidation<T>
+
   constructor(
     readonly schemas: T,
-    readonly schemaType: ST,
-    readonly schemaValidation: IDoValidation<T>,
+    validationType: VT,
+    schemaValidation?: IDoValidation<T>,
   ) {
-    super()
+    super(validationType)
+
+    this.schemaValidation =
+      schemaValidation ?? new IsObjectValidation(validationType)
   }
 
-  validate = (
+  doValidate = (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): ValidateResponse => {
@@ -40,9 +46,7 @@ export class Schema<T, ST extends SchemaType>
       }
     }
 
-    const payloadPath = propertyPath ?? []
-
-    for (const [key, toValidate] of Object.entries(payload)) {
+    for (const key of Object.keys(payload)) {
       if (!(key in this.schemas)) {
         return {
           message: `Field '${key}' do not exists in schema`,
@@ -50,16 +54,22 @@ export class Schema<T, ST extends SchemaType>
           validated: { payload, ...opts },
         }
       }
+    }
 
-      const validation = (this.schemas as Record<PropertyKey, unknown>)[key]
+    const payloadPath = propertyPath ?? []
 
-      if (!doValidate(validation)) {
+    for (const [key, validation] of Object.entries(this.schemas)) {
+      if (!isDoValidation(validation)) {
         return {
           message: `Field '${key}' must do validate`,
           name: 'InvalidValidationError',
           validated: { payload, ...opts },
         }
       }
+
+      if (isPartialValidation && !(key in payload)) continue
+
+      const toValidate = payload[key]
 
       const validationPath = propertyKey
         ? [...payloadPath, propertyKey]

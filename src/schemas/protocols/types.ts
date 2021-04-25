@@ -2,17 +2,6 @@
 import type { ISchema } from './interfaces'
 import type { IValidator } from '@/validators/protocols'
 
-export type RequiredSchema = 'required'
-export type OptionalSchema = 'optional'
-export type PrivateSchema = 'private'
-export type ReadonlySchema = 'readonly'
-
-export type SchemaType =
-  | RequiredSchema
-  | OptionalSchema
-  | PrivateSchema
-  | ReadonlySchema
-
 type ExtractObjectSchema<T extends Record<PropertyKey, unknown>> = {
   [P in keyof T & string]: T[P] extends ISchema<any, any>
     ? ExtractSchema<T[P]>

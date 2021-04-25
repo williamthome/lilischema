@@ -3,11 +3,11 @@ import { IsObjectValidation } from '@/validations/models'
 //#region Factories
 
 interface Sut {
-  sut: IsObjectValidation
+  sut: IsObjectValidation<unknown, 'required'>
 }
 
 const makeSut = (): Sut => {
-  const sut = new IsObjectValidation()
+  const sut = new IsObjectValidation('required')
   return {
     sut,
   }

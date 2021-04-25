@@ -1,25 +1,25 @@
-import type { ExtractSchema, SchemaType } from '@/schemas/protocols'
-import { Schema } from '@/schemas'
-import type { IDoValidation } from '@/validations/protocols'
+import type { IDoValidation, ValidationType } from '@/validations/protocols'
 import {
   BooleanValidator,
   NumberValidator,
-  ObjectValidator,
   StringValidator,
 } from '@/validators/models'
+import type { ExtractSchema } from '@/schemas/protocols'
+import { Schema } from '@/schemas'
+import { IsStringValidation } from '@/validations/models'
 
 //#region Factories
 
-interface Sut<T, ST extends SchemaType> {
-  sut: Schema<T, ST>
+interface Sut<T, VT extends ValidationType> {
+  sut: Schema<T, VT>
 }
 
-const makeSut = <T, ST extends SchemaType>(
+const makeSut = <T, VT extends ValidationType>(
   schemas: T,
-  schemaType: ST,
-  schemaValidation: IDoValidation<T>,
-): Sut<T, ST> => {
-  const sut = new Schema(schemas, schemaType, schemaValidation)
+  validationType: VT,
+  schemaValidation?: IDoValidation<T>,
+): Sut<T, VT> => {
+  const sut = new Schema(schemas, validationType, schemaValidation)
   return {
     sut,
   }
@@ -29,16 +29,12 @@ const makeSut = <T, ST extends SchemaType>(
 
 describe('Schema', () => {
   it('should return IsObjectValidationError', () => {
-    const { sut } = makeSut({}, 'required', new ObjectValidator('required'))
+    const { sut } = makeSut({}, 'required')
     expect((sut.validate(false) as Error).name).toBe('IsObjectValidationError')
   })
 
   it('should return InvalidValidationError', () => {
-    const { sut } = makeSut(
-      { foo: 'i do not do validate' },
-      'required',
-      new ObjectValidator('required'),
-    )
+    const { sut } = makeSut({ foo: 'i do not do validate' }, 'required')
     expect((sut.validate({ foo: '' }) as Error).name).toBe(
       'InvalidValidationError',
     )
@@ -48,12 +44,12 @@ describe('Schema', () => {
     const { sut } = makeSut(
       'i do not do validate',
       'required',
-      new StringValidator('required'),
+      new IsStringValidation('required'),
     )
     expect((sut.validate('foo') as Error).name).toBe('InvalidPayloadError')
   })
 
-  fit('should return nested schema validation error', () => {
+  it('should return nested schema validation error', () => {
     const { sut } = makeSut(
       {
         foo: new NumberValidator('required'),
@@ -65,15 +61,12 @@ describe('Schema', () => {
                 foobar: new StringValidator('required'),
               },
               'required',
-              new ObjectValidator('required'),
             ),
           },
           'required',
-          new ObjectValidator('required'),
         ),
       },
       'required',
-      new ObjectValidator('required'),
     )
     expect(
       (sut.validate({
@@ -100,15 +93,12 @@ describe('Schema', () => {
                 foobar: new StringValidator('required'),
               },
               'required',
-              new ObjectValidator('required'),
             ),
           },
           'required',
-          new ObjectValidator('required'),
         ),
       },
       'required',
-      new ObjectValidator('required'),
     )
 
     const foo: ExtractSchema<typeof sut> = {
@@ -128,10 +118,79 @@ describe('Schema', () => {
     const { sut } = makeSut(
       { foo: new StringValidator('required') },
       'required',
-      new ObjectValidator('required'),
     )
     expect((sut.validate({ bar: 'invalid key' }) as Error).name).toBe(
       'InvalidSchemaError',
     )
+  })
+
+  it('should return undefined if partial', () => {
+    const { sut } = makeSut(
+      {
+        foo: new NumberValidator('required'),
+        bar: new StringValidator('required'),
+      },
+      'required',
+    )
+    expect(
+      sut.validate(
+        {
+          foo: 1,
+        },
+        {
+          isPartialValidation: true,
+        },
+      ),
+    ).toBeUndefined()
+  })
+
+  it('should return PrivatePropertyError', () => {
+    const { sut } = makeSut(
+      {
+        foo: new NumberValidator('private'),
+        bar: new StringValidator('required'),
+      },
+      'required',
+    )
+    expect(
+      (sut.validate({
+        foo: 1,
+      }) as Error).name,
+    ).toBe('PrivatePropertyError')
+  })
+
+  it('should return ReadonlyPropertyError', () => {
+    const { sut } = makeSut(
+      {
+        foo: new NumberValidator('readonly'),
+        bar: new StringValidator('required'),
+      },
+      'required',
+    )
+    expect(
+      (sut.validate(
+        {
+          foo: 1,
+        },
+        {
+          isPartialValidation: true,
+        },
+      ) as Error).name,
+    ).toBe('ReadonlyPropertyError')
+  })
+
+  it('should return RequiredPropertyError', () => {
+    const { sut } = makeSut(
+      {
+        foo: new NumberValidator('required'),
+        bar: new StringValidator('required'),
+      },
+      'required',
+    )
+    expect(
+      (sut.validate({
+        foo: 1,
+      }) as Error).name,
+    ).toBe('RequiredPropertyError')
   })
 })

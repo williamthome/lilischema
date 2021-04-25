@@ -9,3 +9,14 @@ export type ValidateFunction = (
   payload?: ValidatePayload,
   opts?: ValidateOptions,
 ) => ValidateResponse
+
+export type RequiredValidation = 'required'
+export type OptionalValidation = 'optional'
+export type PrivateValidation = 'private'
+export type ReadonlyValidation = 'readonly'
+
+export type ValidationType =
+  | RequiredValidation
+  | OptionalValidation
+  | PrivateValidation
+  | ReadonlyValidation

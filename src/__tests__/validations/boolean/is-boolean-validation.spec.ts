@@ -3,11 +3,11 @@ import { IsBooleanValidation } from '@/validations/models'
 //#region Factories
 
 interface Sut {
-  sut: IsBooleanValidation
+  sut: IsBooleanValidation<boolean, 'required'>
 }
 
 const makeSut = (): Sut => {
-  const sut = new IsBooleanValidation()
+  const sut = new IsBooleanValidation('required')
   return {
     sut,
   }
