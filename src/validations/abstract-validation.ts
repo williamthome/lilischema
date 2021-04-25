@@ -1,5 +1,5 @@
 import type {
-  IValidation,
+  Validation,
   ValidateFunction,
   ValidateOptions,
   ValidatePayload,
@@ -8,12 +8,12 @@ import type {
 } from '@/validations/protocols'
 
 export abstract class AbstractValidation<T, VT extends ValidationType>
-  implements IValidation<T, VT> {
+  implements Validation<T, VT> {
   readonly wrapping!: T
 
   constructor(readonly validationType: VT) {}
 
-  abstract doValidate: ValidateFunction
+  protected abstract doValidate: ValidateFunction
 
   validate = async (
     payload?: ValidatePayload,

@@ -1,6 +1,11 @@
-import type { ValidateOptions, ValidationError } from './interfaces'
+import type {
+  IDoValidation,
+  IValidable,
+  ValidateOptions,
+  ValidateError,
+} from './interfaces'
 
-export type ValidateResponse = void | ValidationError
+export type ValidateResponse = void | ValidateError
 
 export type ValidatePayload = unknown | undefined
 
@@ -19,3 +24,6 @@ export type ValidationType =
   | OptionalValidation
   | PrivateValidation
   | ReadonlyValidation
+
+export type Validation<T, VT extends ValidationType> = IDoValidation<T> &
+  IValidable<VT>

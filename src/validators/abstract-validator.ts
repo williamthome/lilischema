@@ -1,7 +1,6 @@
-import type { IValidator } from './protocols'
 import type {
   IDoValidation,
-  IValidation,
+  Validation,
   ValidateOptions,
   ValidatePayload,
   ValidateResponse,
@@ -9,17 +8,18 @@ import type {
 } from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
-export abstract class AbstractValidator<T, VT extends ValidationType>
-  extends AbstractValidation<T, VT>
-  implements IValidator<T, VT> {
-  readonly validations: IDoValidation<T>[]
+export abstract class AbstractValidator<
+  T,
+  VT extends ValidationType
+> extends AbstractValidation<T, VT> {
+  protected readonly validations: IDoValidation<T>[]
 
-  constructor(validationType: VT, typeValidation: IValidation<T, VT>) {
+  constructor(validationType: VT, typeValidation: Validation<T, VT>) {
     super(validationType)
     this.validations = [typeValidation]
   }
 
-  doValidate = async (
+  protected doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): Promise<ValidateResponse> => {

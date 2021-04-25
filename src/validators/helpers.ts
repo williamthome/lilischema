@@ -1,12 +1,11 @@
 import { isDoValidation } from '@/validations'
-import type { ValidationType } from '@/validations/protocols'
-import type { IValidator } from './protocols'
+import type { Validation, ValidationType } from '@/validations/protocols'
 
-export function isValidator<T, VT extends ValidationType>(
+export function isValidation<T, VT extends ValidationType>(
   obj: unknown,
-): obj is IValidator<T, VT> {
+): obj is Validation<T, VT> {
   return (
     isDoValidation(obj) &&
-    (obj as IValidator<T, VT>)?.validationType !== undefined
+    (obj as Validation<T, VT>)?.validationType !== undefined
   )
 }

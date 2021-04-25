@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Validation } from '@/validations/protocols'
 import type { ISchema } from './interfaces'
-import type { IValidator } from '@/validators/protocols'
 
 type ExtractObjectSchema<T extends Record<PropertyKey, unknown>> = {
   [P in keyof T & string]: T[P] extends ISchema<any, any>
     ? ExtractSchema<T[P]>
-    : T[P] extends IValidator<infer U, any>
+    : T[P] extends Validation<infer U, any>
     ? U
     : never
 }
