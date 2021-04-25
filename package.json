@@ -1,11 +1,19 @@
 {
-  "name": "schema-lib",
+  "name": "lilischema",
   "version": "0.0.1",
-  "main": "index.js",
+  "description": "Schemas and validations",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/williamthome/lilischema.git"
+  },
+  "homepage": "https://github.com/williamthome/lilischema.git",
+  "main": "dist/index.js",
+  "types": "dist/**/*.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
-    "build": "rimraf dist && npx tsc",
-    "dev": "npm run build && ts-node-dev --respawn --transpile-only --inspect -r tsconfig-paths/register src/index.ts",
-    "start": "npm run env NODE_ENV=production -- node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
+    "build": "rimraf dist && npx tsc -p tsconfig.build.json",
     "update": "npx npm-check-updates -u && npm install",
     "lint": "npx eslint src/* --ext .ts --cache --fix",
     "format": "npx prettier --write ./src/**/*.{ts,json}",
@@ -17,11 +25,33 @@
     "test:integration:verbose": "npm run test:verbose -- --watch \"^(.*/)*(.*\\.)*(test)\\.ts$\"",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
-    "test:clear": "npx jest --clearCache"
+    "test:clear": "npx jest --clearCache",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "author": "William Fank Thomé",
+  "contributors": [
+    {
+      "name": "William Fank Thomé",
+      "email": "williamthome@hotmail.com",
+      "url": "https://github.com/williamthome"
+    }
+  ],
   "license": "ISC",
-  "private": true,
+  "private": false,
+  "keywords": [
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript",
+    "schema",
+    "validation",
+    "validate",
+    "validator"
+  ],
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.40",
