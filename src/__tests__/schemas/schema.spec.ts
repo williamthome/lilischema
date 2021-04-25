@@ -30,14 +30,16 @@ const makeSut = <T, VT extends ValidationType>(
 describe('Schema', () => {
   it('should return IsObjectValidationError', async () => {
     const { sut } = makeSut({}, 'required')
-    const error = await sut.validate(false)
-    expect(error ? error.name : undefined).toBe('IsObjectValidationError')
+    await expect(sut.validate(false)).resolves.toMatchObject({
+      name: 'IsObjectValidationError',
+    })
   })
 
   it('should return InvalidValidationError', async () => {
     const { sut } = makeSut({ foo: 'i do not do validate' }, 'required')
-    const error = await sut.validate({ foo: '' })
-    expect(error ? error.name : undefined).toBe('InvalidValidationError')
+    await expect(sut.validate({ foo: '' })).resolves.toMatchObject({
+      name: 'InvalidValidationError',
+    })
   })
 
   it('should return InvalidPayloadError', async () => {
@@ -46,8 +48,9 @@ describe('Schema', () => {
       'required',
       new IsStringValidation('required'),
     )
-    const error = await sut.validate('foo')
-    expect(error ? error.name : undefined).toBe('InvalidPayloadError')
+    await expect(sut.validate('foo')).resolves.toMatchObject({
+      name: 'InvalidPayloadError',
+    })
   })
 
   it('should return nested schema validation error', async () => {
@@ -69,16 +72,19 @@ describe('Schema', () => {
       },
       'required',
     )
-    const error = await sut.validate({
-      foo: 1,
-      bar: {
-        xfoo: true,
-        xbar: {
-          foobar: 0,
+    await expect(
+      sut.validate({
+        foo: 1,
+        bar: {
+          xfoo: true,
+          xbar: {
+            foobar: 0,
+          },
         },
-      },
+      }),
+    ).resolves.toMatchObject({
+      name: 'IsStringValidationError',
     })
-    expect(error ? error.name : undefined).toBe('IsStringValidationError')
   })
 
   it('should return undefined', async () => {
@@ -111,8 +117,7 @@ describe('Schema', () => {
       },
     }
 
-    const error = await sut.validate(foo)
-    expect(error).toBeUndefined()
+    await expect(sut.validate(foo)).resolves.toBeUndefined()
   })
 
   it('should return InvalidPayloadError', async () => {
@@ -120,8 +125,9 @@ describe('Schema', () => {
       { foo: new StringValidator('required') },
       'required',
     )
-    const error = await sut.validate({ bar: 'invalid key' })
-    expect(error ? error.name : undefined).toBe('InvalidSchemaError')
+    await expect(sut.validate({ bar: 'invalid key' })).resolves.toMatchObject({
+      name: 'InvalidSchemaError',
+    })
   })
 
   it('should return undefined if partial', async () => {
@@ -132,13 +138,14 @@ describe('Schema', () => {
       },
       'required',
     )
-    const error = await sut.validate(
-      { foo: 1 },
-      {
-        isPartialValidation: true,
-      },
-    )
-    expect(error).toBeUndefined()
+    await expect(
+      sut.validate(
+        { foo: 1 },
+        {
+          isPartialValidation: true,
+        },
+      ),
+    ).resolves.toBeUndefined()
   })
 
   it('should return PrivatePropertyError', async () => {
@@ -149,8 +156,9 @@ describe('Schema', () => {
       },
       'required',
     )
-    const error = await sut.validate({ foo: 1 })
-    expect(error ? error.name : undefined).toBe('PrivatePropertyError')
+    await expect(sut.validate({ foo: 0 })).resolves.toMatchObject({
+      name: 'PrivatePropertyError',
+    })
   })
 
   it('should return ReadonlyPropertyError', async () => {
@@ -161,13 +169,16 @@ describe('Schema', () => {
       },
       'required',
     )
-    const error = await sut.validate(
-      { foo: 1 },
-      {
-        isPartialValidation: true,
-      },
-    )
-    expect(error ? error.name : undefined).toBe('ReadonlyPropertyError')
+    await expect(
+      sut.validate(
+        { foo: 1 },
+        {
+          isPartialValidation: true,
+        },
+      ),
+    ).resolves.toMatchObject({
+      name: 'ReadonlyPropertyError',
+    })
   })
 
   it('should return RequiredPropertyError', async () => {
@@ -178,7 +189,8 @@ describe('Schema', () => {
       },
       'required',
     )
-    const error = await sut.validate({ foo: 1 })
-    expect(error ? error.name : undefined).toBe('RequiredPropertyError')
+    await expect(sut.validate({ foo: 1 })).resolves.toMatchObject({
+      name: 'RequiredPropertyError',
+    })
   })
 })
