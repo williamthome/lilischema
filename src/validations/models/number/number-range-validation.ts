@@ -7,14 +7,15 @@ import type {
 import { IsNumberValidation } from './is-number-validation'
 import { AbstractValidation } from '@/validations'
 
+export interface NumberRange {
+  min?: number
+  max?: number
+}
 export class NumberRangeValidation<
   T extends number,
   VT extends ValidationType
 > extends AbstractValidation<T, VT> {
-  constructor(
-    validationType: VT,
-    readonly range: { min?: number; max?: number },
-  ) {
+  constructor(validationType: VT, readonly range: NumberRange) {
     super(validationType)
   }
 
