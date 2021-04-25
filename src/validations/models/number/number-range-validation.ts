@@ -18,14 +18,13 @@ export class NumberRangeValidation<
     super(validationType)
   }
 
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
-    const validationError = new IsNumberValidation(
-      this.validationType,
-    ).validate(payload, opts)
-    if (validationError) return validationError
+  ): Promise<ValidateResponse> => {
+    const typeValidation = new IsNumberValidation(this.validationType)
+    const typeValidationError = await typeValidation.validate(payload, opts)
+    if (typeValidationError) return typeValidationError
 
     const { min, max } = this.range
     const number = payload as number

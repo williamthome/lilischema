@@ -15,10 +15,10 @@ export abstract class AbstractValidation<T, VT extends ValidationType>
 
   abstract doValidate: ValidateFunction
 
-  validate = (
+  validate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     const { validationType } = this
     const { propertyKey, isPartialValidation } = opts
 
@@ -50,7 +50,7 @@ export abstract class AbstractValidation<T, VT extends ValidationType>
       }
     }
 
-    const error = this.doValidate(payload, opts)
+    const error = await this.doValidate(payload, opts)
     if (error) return error
   }
 }

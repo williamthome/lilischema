@@ -26,11 +26,11 @@ export class Schema<T, VT extends ValidationType>
       schemaValidation ?? new IsObjectValidation(validationType)
   }
 
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
-    const schemaTypeError = this.schemaValidation.validate(payload, opts)
+  ): Promise<ValidateResponse> => {
+    const schemaTypeError = await this.schemaValidation.validate(payload, opts)
     if (schemaTypeError) return schemaTypeError
 
     const { isPartialValidation, propertyKey, propertyPath } = opts
@@ -75,7 +75,7 @@ export class Schema<T, VT extends ValidationType>
         ? [...payloadPath, propertyKey]
         : payloadPath
 
-      const error = validation.validate(toValidate, {
+      const error = await validation.validate(toValidate, {
         propertyKey: key,
         propertyPath: validationPath,
         isPartialValidation,

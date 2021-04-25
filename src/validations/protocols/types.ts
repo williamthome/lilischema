@@ -8,7 +8,7 @@ export type ValidatePayload = unknown | undefined
 export type ValidateFunction = (
   payload?: ValidatePayload,
   opts?: ValidateOptions,
-) => ValidateResponse
+) => Promise<ValidateResponse>
 
 export type RequiredValidation = 'required'
 export type OptionalValidation = 'optional'

@@ -10,10 +10,10 @@ export class IsObjectValidation<
   T,
   VT extends ValidationType
 > extends AbstractValidation<T, VT> {
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     if (typeof payload !== 'function' && payload === Object(payload)) {
       return
     }

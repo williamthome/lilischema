@@ -10,10 +10,10 @@ export class IsBooleanValidation<
   T extends boolean,
   VT extends ValidationType
 > extends AbstractValidation<T, VT> {
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     if (typeof payload === 'boolean') return
     return {
       message: `${opts.propertyKey || 'Value'} must be an boolean`,

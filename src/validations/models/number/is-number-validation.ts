@@ -10,10 +10,10 @@ export class IsNumberValidation<
   T extends number,
   VT extends ValidationType
 > extends AbstractValidation<T, VT> {
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     if (typeof payload === 'number') return
     return {
       message: `${opts.propertyKey || 'Value'} must be an number`,

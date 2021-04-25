@@ -10,10 +10,10 @@ export class IsStringValidation<
   T extends string,
   VT extends ValidationType
 > extends AbstractValidation<T, VT> {
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     if (typeof payload === 'string') return
     return {
       message: `${opts.propertyKey || 'Value'} must be an string`,

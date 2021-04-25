@@ -19,12 +19,12 @@ export abstract class AbstractValidator<T, VT extends ValidationType>
     this.validations = [typeValidation]
   }
 
-  doValidate = (
+  doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
-  ): ValidateResponse => {
+  ): Promise<ValidateResponse> => {
     for (const validation of this.validations) {
-      const error = validation.validate(payload, opts)
+      const error = await validation.validate(payload, opts)
       if (error) return error
     }
   }
