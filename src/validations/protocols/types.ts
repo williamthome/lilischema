@@ -1,5 +1,4 @@
-import type { ValidationError } from '@/common/protocols'
-import type { ValidateOptions } from './interfaces'
+import type { ValidateOptions, ValidationError } from './interfaces'
 
 export type ValidateResponse = void | ValidationError
 

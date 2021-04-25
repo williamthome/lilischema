@@ -1,5 +1,5 @@
 import type { ITypeWrapper } from '@/common/protocols'
-import type { ValidateFunction, ValidationType } from './types'
+import type { ValidateFunction, ValidatePayload, ValidationType } from './types'
 
 export interface ValidateOptions {
   propertyKey?: string
@@ -19,4 +19,10 @@ export interface IValidation<T, VT extends ValidationType>
   extends IDoValidation<T>,
     IValidable<VT> {
   doValidate: ValidateFunction
+}
+
+export interface ValidationError extends Error {
+  validated: {
+    payload?: ValidatePayload
+  } & ValidateOptions
 }
