@@ -4,10 +4,16 @@ import {
   NumberValidator,
   StringValidator,
 } from '@/validators/models'
-import type { ExtractSchema } from '@/schemas/protocols'
+import type {
+  ExtractCompleteSchema,
+  ExtractSchemaForCreation,
+} from '@/schemas/protocols'
 import { optionalSchema, requiredSchema, Schema } from '@/schemas'
 import { IsStringValidation } from '@/validations/models'
 import {
+  optionalBoolean,
+  optionalNumber,
+  privateBoolean,
   requiredBoolean,
   requiredNumber,
   requiredString,
@@ -112,7 +118,7 @@ describe('Schema', () => {
       'required',
     )
 
-    const foo: ExtractSchema<typeof sut> = {
+    const foo: ExtractCompleteSchema<typeof sut> = {
       foo: 1,
       bar: {
         xfoo: true,
@@ -211,12 +217,40 @@ describe('Schema', () => {
         }),
       })
 
-    const foo: ExtractSchema<typeof schema> = {
+    const foo: ExtractCompleteSchema<typeof schema> = {
       foo: 1,
       bar: {
         xfoo: true,
         xbar: {
           foobar: 'foobar',
+        },
+      },
+    }
+
+    await expect(schema().validate(foo)).resolves.toBeUndefined()
+  })
+
+  it('should return undefined using multiples validations types', async () => {
+    const schema = () =>
+      requiredSchema({
+        foo: optionalNumber(),
+        bar: optionalSchema({
+          xfoo: privateBoolean(),
+          xbar: requiredSchema({
+            yfoo: optionalBoolean(),
+            ybar: requiredSchema({
+              xfoobar: optionalNumber(),
+            }),
+          }),
+        }),
+      })
+
+    const foo: ExtractSchemaForCreation<typeof schema> = {
+      bar: {
+        xbar: {
+          ybar: {
+            xfoobar: undefined,
+          },
         },
       },
     }

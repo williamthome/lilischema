@@ -6,7 +6,7 @@ import type {
   ValidateResponse,
   ValidationType,
 } from '@/validations/protocols'
-import { AbstractValidation, isDoValidation } from '@/validations'
+import { AbstractValidation, isDoValidation, isValidable } from '@/validations'
 import { isIterable } from '@/common/helpers'
 import { IsObjectValidation } from '@/validations/models'
 
@@ -67,7 +67,10 @@ export class Schema<T, VT extends ValidationType>
         }
       }
 
-      if (isPartialValidation && !(key in payload)) continue
+      const isPrivateField =
+        isValidable(validation) && validation.validationType === 'private'
+
+      if (!(key in payload) && (isPartialValidation || isPrivateField)) continue
 
       const toValidate = payload[key]
 
