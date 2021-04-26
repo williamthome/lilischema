@@ -8,10 +8,10 @@ import type {
 } from '@/validations/protocols'
 import { AbstractValidation } from '@/validations'
 
-export abstract class AbstractValidator<
+export class Validator<T, VT extends ValidationType> extends AbstractValidation<
   T,
-  VT extends ValidationType
-> extends AbstractValidation<T, VT> {
+  VT
+> {
   protected readonly validations: IDoValidation<T>[]
 
   constructor(validationType: VT, typeValidation: Validation<T, VT>) {

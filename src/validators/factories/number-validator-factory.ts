@@ -1,45 +1,17 @@
-import { NumberValidator } from '../models'
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { ValidationType } from '@/validations/protocols'
+import { NumberValidator, NumberValidatorOptions } from '../models'
 
-/**
- *
- * @returns required number validator
- */
-export function requiredNumber<T extends number>(): NumberValidator<
-  T,
-  'required'
-> {
-  return new NumberValidator('required')
+export function numberValidatorFactory<
+  T extends number,
+  VT extends ValidationType
+>(validationType: VT) {
+  return function (opts: NumberValidatorOptions = {}): NumberValidator<T, VT> {
+    return new NumberValidator(validationType, opts)
+  }
 }
 
-/**
- *
- * @returns optional number validator
- */
-export function optionalNumber<T extends number>(): NumberValidator<
-  T,
-  'optional'
-> {
-  return new NumberValidator('optional')
-}
-
-/**
- *
- * @returns private number validator
- */
-export function privateNumber<T extends number>(): NumberValidator<
-  T,
-  'private'
-> {
-  return new NumberValidator('private')
-}
-
-/**
- *
- * @returns readonly number validator
- */
-export function readonlyNumber<T extends number>(): NumberValidator<
-  T,
-  'readonly'
-> {
-  return new NumberValidator('readonly')
-}
+export const requiredNumber = numberValidatorFactory('required')
+export const optionalNumber = numberValidatorFactory('optional')
+export const privateNumber = numberValidatorFactory('private')
+export const readonlyNumber = numberValidatorFactory('readonly')

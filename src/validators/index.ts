@@ -1,2 +1,2 @@
-export * from './abstract-validator'
+export * from './validator'
 export * from './helpers'

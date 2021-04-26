@@ -1,45 +1,21 @@
-import { StringValidator } from '../models'
+import {
+  StringArrayMatchOptions,
+  ValidationType,
+} from '@/validations/protocols'
+import { StringValidator, StringValidatorOptions } from '../models'
 
-/**
- *
- * @returns required string validator
- */
-export function requiredString<T extends string>(): StringValidator<
-  T,
-  'required'
-> {
-  return new StringValidator('required')
+export function stringValidatorFactory<
+  T extends string,
+  VT extends ValidationType
+>(validationType: VT) {
+  return function (
+    opts: StringArrayMatchOptions & StringValidatorOptions<T> = {},
+  ): StringValidator<T, VT> {
+    return new StringValidator(validationType, opts, opts)
+  }
 }
 
-/**
- *
- * @returns optional string validator
- */
-export function optionalString<T extends string>(): StringValidator<
-  T,
-  'optional'
-> {
-  return new StringValidator('optional')
-}
-
-/**
- *
- * @returns private string validator
- */
-export function privateString<T extends string>(): StringValidator<
-  T,
-  'private'
-> {
-  return new StringValidator('private')
-}
-
-/**
- *
- * @returns readonly string validator
- */
-export function readonlyString<T extends string>(): StringValidator<
-  T,
-  'readonly'
-> {
-  return new StringValidator('readonly')
-}
+export const requiredString = stringValidatorFactory('required')
+export const optionalString = stringValidatorFactory('optional')
+export const privateString = stringValidatorFactory('private')
+export const readonlyString = stringValidatorFactory('readonly')

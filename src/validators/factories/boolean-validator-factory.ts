@@ -1,45 +1,14 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { BooleanValidator } from '../models'
 
-/**
- *
- * @returns required boolean validator
- */
-export function requiredBoolean<T extends boolean>(): BooleanValidator<
-  T,
-  'required'
-> {
-  return new BooleanValidator('required')
-}
+export const requiredBoolean = <T extends boolean>() =>
+  new BooleanValidator<T, 'required'>('required')
 
-/**
- *
- * @returns optional boolean validator
- */
-export function optionalBoolean<T extends boolean>(): BooleanValidator<
-  T,
-  'optional'
-> {
-  return new BooleanValidator('optional')
-}
+export const optionalBoolean = <T extends boolean>() =>
+  new BooleanValidator<T, 'optional'>('optional')
 
-/**
- *
- * @returns private boolean validator
- */
-export function privateBoolean<T extends boolean>(): BooleanValidator<
-  T,
-  'private'
-> {
-  return new BooleanValidator('private')
-}
+export const privateBoolean = <T extends boolean>() =>
+  new BooleanValidator<T, 'private'>('private')
 
-/**
- *
- * @returns readonly boolean validator
- */
-export function readonlyBoolean<T extends boolean>(): BooleanValidator<
-  T,
-  'readonly'
-> {
-  return new BooleanValidator('readonly')
-}
+export const readonlyBoolean = <T extends boolean>() =>
+  new BooleanValidator<T, 'readonly'>('readonly')
