@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { ValidationType } from '@/validations/protocols'
+import type { ValidationType } from '@/validations/protocols'
 import { NumberValidator, NumberValidatorOptions } from '../models'
 
 export function numberValidatorFactory<

@@ -1,4 +1,4 @@
-import { IDoValidation } from '@/validations/protocols'
+import type { IDoValidation } from '@/validations/protocols'
 import { Schema } from './schema'
 
 /**

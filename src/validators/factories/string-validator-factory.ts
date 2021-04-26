@@ -1,4 +1,4 @@
-import {
+import type {
   StringArrayMatchOptions,
   ValidationType,
 } from '@/validations/protocols'

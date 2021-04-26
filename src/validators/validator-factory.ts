@@ -1,4 +1,4 @@
-import { Validation, ValidationType } from '@/validations/protocols'
+import type { Validation, ValidationType } from '@/validations/protocols'
 import { Validator } from './validator'
 
 export class ValidatorFactory<
