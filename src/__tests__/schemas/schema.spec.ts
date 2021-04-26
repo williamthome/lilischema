@@ -5,8 +5,13 @@ import {
   StringValidator,
 } from '@/validators/models'
 import type { ExtractSchema } from '@/schemas/protocols'
-import { Schema } from '@/schemas'
+import { optionalSchema, requiredSchema, Schema } from '@/schemas'
 import { IsStringValidation } from '@/validations/models'
+import {
+  requiredBoolean,
+  requiredNumber,
+  requiredString,
+} from '@/validators/factories'
 
 //#region Factories
 
@@ -192,5 +197,30 @@ describe('Schema', () => {
     await expect(sut.validate({ foo: 1 })).resolves.toMatchObject({
       name: 'RequiredPropertyError',
     })
+  })
+
+  it('should return undefined using function schema', async () => {
+    const schema = () =>
+      requiredSchema({
+        foo: requiredNumber(),
+        bar: requiredSchema({
+          xfoo: requiredBoolean(),
+          xbar: requiredSchema({
+            foobar: requiredString(),
+          }),
+        }),
+      })
+
+    const foo: ExtractSchema<typeof schema> = {
+      foo: 1,
+      bar: {
+        xfoo: true,
+        xbar: {
+          foobar: 'foobar',
+        },
+      },
+    }
+
+    await expect(schema().validate(foo)).resolves.toBeUndefined()
   })
 })
