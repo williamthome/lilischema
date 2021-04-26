@@ -31,6 +31,7 @@ export default {
     '/protocols/',
     '.+\\.d\\.ts',
     'index.ts',
+    'protocols.ts',
   ],
 
   // Indicates which provider should be used to instrument code for coverage
