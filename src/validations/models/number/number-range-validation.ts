@@ -4,7 +4,6 @@ import type {
   ValidateResponse,
   ValidationType,
 } from '@/validations/protocols'
-import { IsNumberValidation } from './is-number-validation'
 import { AbstractValidation } from '@/validations'
 
 export interface NumberRange {
@@ -23,30 +22,26 @@ export class NumberRangeValidation<
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): Promise<ValidateResponse> => {
-    const typeValidation = new IsNumberValidation(this.validationType)
-    const typeValidationError = await typeValidation.validate(payload, opts)
-    if (typeValidationError) return typeValidationError
-
     const { min, max } = this.range
-    const number = payload as number
+    const value = payload as number
     const { propertyKey } = opts
 
     if (min !== undefined && max !== undefined) {
-      if (number >= min && number <= max) return
+      if (value >= min && value <= max) return
       return {
         message: `${propertyKey || 'Value'} must be between ${min} && ${max}`,
         name: 'NumberRangeValidationError',
         validated: { payload, ...opts },
       }
     } else if (min !== undefined) {
-      if (number >= min) return
+      if (value >= min) return
       return {
         message: `${propertyKey || 'Value'} must be at least ${min}`,
         name: 'MinNumberValidationError',
         validated: { payload, ...opts },
       }
     } else if (max !== undefined) {
-      if (number <= max) return
+      if (value <= max) return
       return {
         message: `${propertyKey || 'Value'} must be a maximum of ${max}`,
         name: 'MaxNumberValidationError',
