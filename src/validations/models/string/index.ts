@@ -1,1 +1,5 @@
 export * from './is-string-validation'
+export * from './string-must-be-validation'
+export * from './string-must-not-be-validation'
+export * from './string-must-contains-validation'
+export * from './string-must-not-contains-validation'
