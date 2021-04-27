@@ -13,7 +13,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "rimraf dist && npx tsc -p tsconfig.build.json",
+    "build": "rimraf dist && npx ttsc -p tsconfig.build.json",
     "update": "npx npm-check-updates -u && npm install",
     "lint": "npx eslint src/* --ext .ts --cache --fix",
     "format": "npx prettier --write ./src/**/*.{ts,json}",
@@ -70,5 +70,9 @@
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "ttypescript": "^1.5.12",
+    "typescript-transform-paths": "^2.2.3"
   }
 }
