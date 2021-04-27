@@ -99,11 +99,7 @@ type OvewritedSchema<T, RequiredType, OptionalType, ReadonlyType> = {
       >
 }
 
-type Unboxed<T> = T extends (infer U)[]
-  ? U
-  : T extends () => unknown
-  ? ReturnType<T>
-  : T
+type Unboxed<T> = T extends () => unknown ? Unboxed<ReturnType<T>> : T
 
 export type ExtractCompleteSchema<T> = OvewritedSchema<
   Unboxed<T>,

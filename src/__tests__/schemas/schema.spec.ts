@@ -234,7 +234,7 @@ describe('Schema', () => {
   })
 
   it('should return undefined using multiples validations types', async () => {
-    const schema = () =>
+    const schema = () => () =>
       requiredSchema({
         foo: optionalNumber(),
         bar: optionalSchema({
@@ -260,6 +260,6 @@ describe('Schema', () => {
       },
     }
 
-    await expect(schema().validate(foo)).resolves.toBeUndefined()
+    await expect(schema()().validate(foo)).resolves.toBeUndefined()
   })
 })
