@@ -12,6 +12,9 @@
   "files": [
     "dist/**/*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "rimraf dist && npx ttsc -p tsconfig.build.json",
     "update": "npx npm-check-updates -u && npm install",
