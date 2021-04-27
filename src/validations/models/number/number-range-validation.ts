@@ -29,7 +29,7 @@ export class NumberRangeValidation<
     if (min !== undefined && max !== undefined) {
       if (value >= min && value <= max) return
       return {
-        message: `${propertyKey || 'Value'} must be between ${min} && ${max}`,
+        message: `${propertyKey || 'Value'} must be between ${min} and ${max}`,
         name: 'NumberRangeValidationError',
         validated: { payload, ...opts },
       }

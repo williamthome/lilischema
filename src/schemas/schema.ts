@@ -1,4 +1,3 @@
-import type { ISchema } from './protocols/interfaces'
 import type {
   IDoValidation,
   ValidateOptions,
@@ -10,13 +9,14 @@ import { AbstractValidation, isDoValidation, isValidable } from '@/validations'
 import { isIterable } from '@/common/helpers'
 import { IsObjectValidation } from '@/validations/models'
 
-export class Schema<T, VT extends ValidationType>
-  extends AbstractValidation<T, VT>
-  implements ISchema<T, VT> {
-  readonly schemaValidation: IDoValidation<T>
+export class Schema<T, VT extends ValidationType> extends AbstractValidation<
+  T,
+  VT
+> {
+  private readonly schemaValidation: IDoValidation<T>
 
   constructor(
-    readonly schemas: T,
+    private readonly schemas: T,
     validationType: VT,
     schemaValidation?: IDoValidation<T>,
   ) {
@@ -26,7 +26,7 @@ export class Schema<T, VT extends ValidationType>
       schemaValidation ?? new IsObjectValidation(validationType)
   }
 
-  doValidate = async (
+  protected doValidate = async (
     payload?: ValidatePayload,
     opts: ValidateOptions = {},
   ): Promise<ValidateResponse> => {

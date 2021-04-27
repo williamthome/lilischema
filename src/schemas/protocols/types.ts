@@ -7,7 +7,7 @@ import type {
   ReadonlyValidation,
   RequiredValidation,
 } from '@/validations/protocols'
-import type { ISchema } from './interfaces'
+import type { Schema } from '../schema'
 
 type ValidableTypeOrNever<T, Filter> = {
   [P in keyof T]: T[P] extends IValidable<infer VT>
@@ -71,7 +71,7 @@ type OvewriteSchema<
   OvewriteToOptional<T, OptionalType> &
   OvewriteToReadonly<T, ReadonlyType>
 
-type ExtractDoValidationType<T> = T extends ISchema<infer U, any>
+type ExtractDoValidationType<T> = T extends Schema<infer U, any>
   ? {
       [P in keyof U]: ExtractDoValidationType<U[P]>
     }
@@ -86,7 +86,7 @@ type OvewritedSchema<T, RequiredType, OptionalType, ReadonlyType> = {
     OptionalType,
     ReadonlyType
   >]: OvewriteSchema<T, RequiredType, OptionalType, ReadonlyType>[P] extends
-    | ISchema<any, any>
+    | Schema<any, any>
     | undefined
     ? OvewritedSchema<
         OvewriteSchema<T, RequiredType, OptionalType, ReadonlyType>[P],

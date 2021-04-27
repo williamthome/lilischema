@@ -14,9 +14,6 @@ import {
   optionalBoolean,
   optionalNumber,
   privateBoolean,
-  requiredBoolean,
-  requiredNumber,
-  requiredString,
 } from '@/validators/factories'
 
 //#region Factories
@@ -208,21 +205,27 @@ describe('Schema', () => {
   it('should return undefined using function schema', async () => {
     const schema = () =>
       requiredSchema({
-        foo: requiredNumber(),
-        bar: requiredSchema({
-          xfoo: requiredBoolean(),
+        foo: optionalNumber(),
+        bar: optionalSchema({
+          xfoo: privateBoolean(),
           xbar: requiredSchema({
-            foobar: requiredString(),
+            yfoo: optionalBoolean(),
+            ybar: requiredSchema({
+              xfoobar: optionalNumber(),
+            }),
           }),
         }),
       })
 
-    const foo: ExtractCompleteSchema<typeof schema> = {
+    type Foo = ExtractSchemaForCreation<typeof schema>
+
+    const foo: Foo = {
       foo: 1,
       bar: {
-        xfoo: true,
         xbar: {
-          foobar: 'foobar',
+          ybar: {
+            xfoobar: undefined,
+          },
         },
       },
     }
@@ -245,7 +248,9 @@ describe('Schema', () => {
         }),
       })
 
-    const foo: ExtractSchemaForCreation<typeof schema> = {
+    type Foo = ExtractSchemaForCreation<typeof schema>
+
+    const foo: Foo = {
       bar: {
         xbar: {
           ybar: {

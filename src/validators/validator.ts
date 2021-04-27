@@ -19,7 +19,7 @@ export class Validator<T, VT extends ValidationType> extends AbstractValidation<
     this.validations = [typeValidation]
   }
 
-  push(...validator: IDoValidation<T>[]): this {
+  protected push(...validator: IDoValidation<T>[]): this {
     this.validations.push(...validator)
     return this
   }
